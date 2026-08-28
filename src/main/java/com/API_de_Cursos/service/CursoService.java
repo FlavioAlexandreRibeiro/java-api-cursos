@@ -5,6 +5,8 @@ import com.API_de_Cursos.dto.CursoRequestDTO;
 import com.API_de_Cursos.dto.CursoResponseDTO;
 import com.API_de_Cursos.entity.Curso;
 import com.API_de_Cursos.entity.Professor;
+import com.API_de_Cursos.exception.DuplicateResourceException;
+import com.API_de_Cursos.exception.ResourceNotFoundException;
 import com.API_de_Cursos.repository.CursoRepository;
 import com.API_de_Cursos.repository.ProfessorRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +26,9 @@ public class CursoService {
     @Transactional
     public CursoResponseDTO cadastrar(CursoRequestDTO cursoDTO) {
         Professor professor = professorRepository.findById(cursoDTO.getProfessorId())
-                .orElseThrow(() -> new RuntimeException(
-                        "Professor não encontrado com ID: " + cursoDTO.getProfessorId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Professor", "id", cursoDTO.getProfessorId().toString()));
+
+        verificarNomeDuplicado(cursoDTO.getNome());
 
         Curso curso = new Curso();
         curso.setProfessor(professor);
@@ -86,7 +89,7 @@ public class CursoService {
     @Transactional
     public CursoResponseDTO buscarPorId(Long id) {
         Curso curso = cursoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Curso não encontrado com ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Curso", id));
         return CursoResponseDTO.fromEntity(curso);
     }
 
@@ -94,14 +97,13 @@ public class CursoService {
     @Transactional
     public CursoResponseDTO atualizar(Long id, CursoRequestDTO cursoDTO) {
         Curso curso = cursoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Curso não encontrado com ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Curso", id));
 
         verificarNomeDuplicadoAtualizar(cursoDTO.getNome(), id);
 
         if (cursoDTO.getProfessorId() != null) {
             Professor professor = professorRepository.findById(cursoDTO.getProfessorId())
-                    .orElseThrow(() -> new RuntimeException(
-                            "Professor não encontrado com ID: " + cursoDTO.getProfessorId()));
+                    .orElseThrow(() -> new ResourceNotFoundException("Professor", "id", cursoDTO.getProfessorId().toString()));
             curso.setProfessor(professor);
         }
 
@@ -110,19 +112,19 @@ public class CursoService {
         curso.setCategoria(cursoDTO.getCategoria());
         curso.setCargaHoraria(cursoDTO.getCargaHoraria());
 
-        return CursoResponseDTO.fromEntity(curso);
+        return CursoResponseDTO.fromEntity(cursoRepository.save(curso));
     }
 
 
     private void verificarNomeDuplicado(String nome) {
         if (cursoRepository.existsByNome(nome)) {
-            throw new RuntimeException("Nome de curso já cadastrado");
+            throw new DuplicateResourceException("Curso", "nome", nome);
         }
     }
 
     private void verificarNomeDuplicadoAtualizar(String nome, Long id) {
         if (cursoRepository.existsByNomeAndIdNot(nome, id)) {
-            throw new RuntimeException("Nome de curso já cadastrado");
+            throw new DuplicateResourceException("Curso", "nome", nome);
         }
     }
 
@@ -130,7 +132,7 @@ public class CursoService {
     @Transactional
     public void deletar(Long id) {
         Curso curso = cursoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Curso não encontrado com ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Curso", id));
         cursoRepository.delete(curso);
     }
 }
