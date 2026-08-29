@@ -32,11 +32,13 @@ public class CursoController {
             @RequestParam(required = false) String nome,
             @RequestParam(required = false) String descricao,
             @RequestParam(required = false) String categoria,
-            @RequestParam(required = false) Integer cargaHoraria,
+            @RequestParam(required = false) Integer cargaHorariaMinima,
+            @RequestParam(required = false) Integer cargaHorariaMaxima,
             @RequestParam(required = false) Long professorId,
             Pageable pageable) {
         return ResponseEntity.ok(cursoService.buscarTodos(
-                nome, descricao, categoria, cargaHoraria, professorId, pageable));
+                nome, descricao, categoria,
+                cargaHorariaMinima, cargaHorariaMaxima, professorId, pageable));
     }
 
 

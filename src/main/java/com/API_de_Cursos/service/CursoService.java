@@ -9,6 +9,7 @@ import com.API_de_Cursos.exception.DuplicateResourceException;
 import com.API_de_Cursos.exception.ResourceNotFoundException;
 import com.API_de_Cursos.repository.CursoRepository;
 import com.API_de_Cursos.repository.ProfessorRepository;
+import com.API_de_Cursos.specification.CursoSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +30,7 @@ public class CursoService {
                 .orElseThrow(() -> new ResourceNotFoundException("Professor", "id", cursoDTO.getProfessorId().toString()));
 
         verificarNomeDuplicado(cursoDTO.getNome());
+        verificarNomeDuplicado(cursoDTO.getNome());
 
         Curso curso = new Curso();
         curso.setProfessor(professor);
@@ -45,7 +47,8 @@ public class CursoService {
             String nome,
             String descricao,
             String categoria,
-            Integer cargaHoraria,
+            Integer cargaHorariaMinima,
+            Integer cargaHorariaMaxima,
             Long professorId,
             Pageable pageable) {
 
@@ -53,33 +56,12 @@ public class CursoService {
                                       criteriaBuilder) ->
                 criteriaBuilder.conjunction());
 
-        if (nome != null) {
-            spec = spec.and((r, q, cb) ->
-                    cb.like(
-                            cb.lower(r.get("nome")),
-                            "%" + nome.toLowerCase() + "%"));
-        }
-
-        if (descricao != null) {
-            spec = spec.and((r, q, cb) ->
-                    cb.equal(r.get("descricao"), descricao));
-        }
-
-        if (categoria != null) {
-            spec = spec.and((root, query,
-                             cb) ->
-                    cb.equal(root.get("categoria"), categoria));
-        }
-
-        if (cargaHoraria != null) {
-            spec = spec.and((r, q, cb) ->
-                    cb.equal(r.get("cargaHoraria"), cargaHoraria));
-        }
-
-        if (professorId != null) {
-            spec = spec.and((r, q, cb) ->
-                    cb.equal(r.get("professor"), professorId));
-        }
+        spec = spec.and(CursoSpecification.porNome(nome));
+        spec = spec.and(CursoSpecification.porCategoria(categoria));
+        spec = spec.and(CursoSpecification.porDescricao(descricao));
+        spec = spec.and(CursoSpecification.porCargaHorariaMinima(cargaHorariaMinima));
+        spec = spec.and(CursoSpecification.porCargaHorariaMaxima(cargaHorariaMaxima));
+        spec = spec.and(CursoSpecification.porProfessorId(professorId));
 
         return cursoRepository.findAll(spec, pageable)
                 .map(CursoResponseDTO::fromEntity);
