@@ -1,0 +1,309 @@
+{
+	"info": {
+		"_postman_id": "api-cursos-collection",
+		"name": "API de Cursos",
+		"description": "Collection para testar a API de Cursos - Sistema de gerenciamento de cursos e professores",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Professores",
+			"item": [
+				{
+					"name": "Criar Professor",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"João Silva\",\n    \"email\": \"joao.silva@email.com\",\n    \"telefone\": \"11999999999\",\n    \"especialidade\": \"Java\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/professores",
+							"host": ["{{baseUrl}}"],
+							"path": ["professores"]
+						},
+						"description": "Cria um novo professor no sistema"
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Todos os Professores",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/professores?page=0&size=10",
+							"host": ["{{baseUrl}}"],
+							"path": ["professores"],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								},
+								{
+									"key": "nome",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "email",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "telefone",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "especialidade",
+									"value": "",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Busca todos os professores com filtros opcionais e paginação"
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Professor por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/professores/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["professores", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Busca um professor específico pelo seu ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar Professor",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"João Silva Atualizado\",\n    \"email\": \"joao.silva.atualizado@email.com\",\n    \"telefone\": \"11988888888\",\n    \"especialidade\": \"Java e Spring Boot\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/professores/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["professores", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Atualiza os dados de um professor existente"
+					},
+					"response": []
+				},
+				{
+					"name": "Deletar Professor",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/professores/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["professores", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Deleta um professor pelo ID (também deleta todos os cursos associados)"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cursos",
+			"item": [
+				{
+					"name": "Criar Curso",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"Java Spring Boot\",\n    \"descricao\": \"Curso completo de desenvolvimento com Java e Spring Boot\",\n    \"categoria\": \"Programação\",\n    \"cargaHoraria\": 40,\n    \"professorId\": 1\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/cursos",
+							"host": ["{{baseUrl}}"],
+							"path": ["cursos"]
+						},
+						"description": "Cria um novo curso no sistema"
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Todos os Cursos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/cursos?page=0&size=10",
+							"host": ["{{baseUrl}}"],
+							"path": ["cursos"],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								},
+								{
+									"key": "nome",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "descricao",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "categoria",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "cargaHorariaMinima",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "cargaHorariaMaxima",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "professorId",
+									"value": "",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Busca todos os cursos com filtros opcionais e paginação"
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Curso por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/cursos/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["cursos", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Busca um curso específico pelo seu ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar Curso",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"Java Spring Boot Avançado\",\n    \"descricao\": \"Curso avançado de desenvolvimento com Java e Spring Boot\",\n    \"categoria\": \"Programação\",\n    \"cargaHoraria\": 60,\n    \"professorId\": 1\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/cursos/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["cursos", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Atualiza os dados de um curso existente"
+					},
+					"response": []
+				},
+				{
+					"name": "Deletar Curso",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/cursos/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["cursos", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Deleta um curso pelo seu ID"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
